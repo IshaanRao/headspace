@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "395505841347",
+    "project_id": "headspace-85d1b",
+    "storage_bucket": "headspace-85d1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395505841347:android:363c91950f73a6f33c1e76",
+        "android_client_info": {
+          "package_name": "com.example.benice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395505841347-7k3t5cqpsvn8r3v7u6hma7at9kv6vk60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEcQ7TjyYNcHyV09CmwajVR5nWA4om6WE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395505841347-7k3t5cqpsvn8r3v7u6hma7at9kv6vk60.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "395505841347-omjld7ld87coo8f7daod7vbggofkm7ih.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.benice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
