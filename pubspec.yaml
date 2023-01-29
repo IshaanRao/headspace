@@ -39,6 +39,14 @@ dependencies:
   google_fonts: ^4.0.1
   firebase_core: ^2.4.1
   firebase_auth: ^4.2.5
+  camera: ^0.10.3
+  path_provider: ^2.0.12
+  path: ^1.8.2
+  firebase_database: ^10.0.9
+  cloud_firestore: ^4.3.1
+  flutter_ffmpeg: ^0.4.2
+  firebase_storage: ^11.0.10
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

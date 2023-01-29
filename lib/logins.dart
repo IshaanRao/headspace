@@ -1,9 +1,17 @@
+import 'package:benice/mainpage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'globals.dart' as globals;
+
 class SignUpPage extends StatelessWidget {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   void signUp(String name, String email, String password) async {
     try {
       final credential =
@@ -17,6 +25,12 @@ class SignUpPage extends StatelessWidget {
         return;
       }
       user.updateDisplayName(name);
+      final db = FirebaseFirestore.instance;
+      final blankFriends = <String, dynamic>{
+        "friendsWith": [],
+        "requestsFrom": [],
+      };
+      db.collection("friends").doc(user.uid).set(blankFriends);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -30,10 +44,9 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: globals.background,
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -41,20 +54,26 @@ class SignUpPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 5,
+                height: 150,
               ),
-              Text(
-                "Sign Up",
-                textAlign: TextAlign.center,
-                style:
-                    GoogleFonts.archivoBlack(fontSize: 30, color: Colors.black),
+              SizedBox(
+                width: 200,
+                child: Text(
+                  "Create New Account",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.archivoBlack(
+                      fontSize: 30, color: globals.mainBlue),
+                ),
               ),
               const SizedBox(
-                height: 20,
+                height: 40,
               ),
               SizedBox(
                 width: 350,
                 child: TextField(
+                  style: TextStyle(
+                    color: globals.mainBlue,
+                  ),
                   controller: nameController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -62,6 +81,9 @@ class SignUpPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     labelText: "Name",
+                    labelStyle: TextStyle(
+                      color: globals.mainBlue,
+                    ),
                   ),
                 ),
               ),
@@ -71,6 +93,9 @@ class SignUpPage extends StatelessWidget {
               SizedBox(
                 width: 350,
                 child: TextField(
+                  style: TextStyle(
+                    color: globals.mainBlue,
+                  ),
                   controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -78,6 +103,9 @@ class SignUpPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     labelText: "Email",
+                    labelStyle: TextStyle(
+                      color: globals.mainBlue,
+                    ),
                   ),
                 ),
               ),
@@ -88,6 +116,9 @@ class SignUpPage extends StatelessWidget {
                 width: 350,
                 child: TextField(
                   obscureText: true,
+                  style: TextStyle(
+                    color: globals.mainBlue,
+                  ),
                   controller: passwordController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -95,6 +126,9 @@ class SignUpPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     labelText: "Password",
+                    labelStyle: TextStyle(
+                      color: globals.mainBlue,
+                    ),
                   ),
                 ),
               ),
@@ -102,8 +136,8 @@ class SignUpPage extends StatelessWidget {
                 height: 20,
               ),
               SizedBox(
-                width: 100, // <-- Your width
-                height: 35,
+                width: 350, // <-- Your width
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () {
                     signUp(nameController.text, emailController.text,
@@ -111,7 +145,7 @@ class SignUpPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    backgroundColor: const Color(0xff099f9f),
+                    backgroundColor: globals.mainBlue,
                   ),
                   child: const Text('Register'),
                 ),
@@ -125,11 +159,18 @@ class SignUpPage extends StatelessWidget {
 }
 
 class LoginPage extends StatelessWidget {
-  void login(String email, String password) async {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  void login(BuildContext context, String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      print("successful login");
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainPage(user: credential.user)));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -141,9 +182,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: globals.background,
       body: SafeArea(
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -151,13 +192,16 @@ class LoginPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 5,
+                height: 190,
               ),
-              Text(
-                "Log In",
-                textAlign: TextAlign.center,
-                style:
-                    GoogleFonts.archivoBlack(fontSize: 30, color: Colors.black),
+              SizedBox(
+                width: 350,
+                child: Text(
+                  "Sign In to your Account",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.archivoBlack(
+                      fontSize: 30, color: globals.mainBlue),
+                ),
               ),
               const SizedBox(
                 height: 20,
@@ -165,6 +209,9 @@ class LoginPage extends StatelessWidget {
               SizedBox(
                 width: 350,
                 child: TextField(
+                  style: TextStyle(
+                    color: globals.mainBlue,
+                  ),
                   controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -172,6 +219,9 @@ class LoginPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     labelText: "Email",
+                    labelStyle: TextStyle(
+                      color: globals.mainBlue,
+                    ),
                   ),
                 ),
               ),
@@ -182,6 +232,9 @@ class LoginPage extends StatelessWidget {
                 width: 350,
                 child: TextField(
                   obscureText: true,
+                  style: TextStyle(
+                    color: globals.mainBlue,
+                  ),
                   controller: passwordController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -189,6 +242,9 @@ class LoginPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     labelText: "Password",
+                    labelStyle: TextStyle(
+                      color: globals.mainBlue,
+                    ),
                   ),
                 ),
               ),
@@ -196,15 +252,16 @@ class LoginPage extends StatelessWidget {
                 height: 20,
               ),
               SizedBox(
-                width: 100, // <-- Your width
-                height: 35,
+                width: 350, // <-- Your width
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    login(emailController.text, passwordController.text);
+                    login(
+                        context, emailController.text, passwordController.text);
                   },
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    backgroundColor: const Color(0xff099f9f),
+                    backgroundColor: globals.mainBlue,
                   ),
                   child: const Text('Login'),
                 ),
