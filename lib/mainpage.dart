@@ -43,8 +43,15 @@ class MainPageState extends State<MainPage> {
       for (var element in allPosts.docs) {
         String url =
             await storage.child("posts/${element.id}").getDownloadURL();
-        posts.add(PostData(element.data()["caption"], element.data()["madeAt"],
-            element.data()["madeBy"], element.data()["madeByUsername"], url));
+        posts.add(PostData(
+          element.id,
+          element.data()["caption"],
+          element.data()["madeAt"],
+          element.data()["madeBy"],
+          element.data()["madeByUsername"],
+          url,
+          element.data()["comments"],
+        ));
       }
       setState(() {});
       //FirebaseAuth.instance.signOut();
@@ -98,6 +105,10 @@ class MainPageState extends State<MainPage> {
             },
             child: const Text("post"),
           ),
+          FloatingActionButton(
+            onPressed: () {},
+            child: Icon(Icons.add_circle_outlined, color: globals.mainBlue),
+          ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -106,7 +117,7 @@ class MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-          )
+          ),
         ]),
       ),
     );

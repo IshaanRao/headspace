@@ -49,7 +49,6 @@ class Post extends StatelessWidget {
               child: Image.network(postData.imageUrl),
             ),
           ),
-          Text(postData.caption),
           const SizedBox(height: 30),
         ],
       ),
@@ -58,12 +57,14 @@ class Post extends StatelessWidget {
 }
 
 class PostData {
+  final String id;
   final String caption;
   final int madeAt;
   final String madeBy;
   final String madeByUsername;
   final String imageUrl;
+  final List<dynamic> comments;
 
-  const PostData(this.caption, this.madeAt, this.madeBy, this.madeByUsername,
-      this.imageUrl);
+  const PostData(this.id, this.caption, this.madeAt, this.madeBy,
+      this.madeByUsername, this.imageUrl, this.comments);
 }
