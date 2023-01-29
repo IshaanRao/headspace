@@ -12,7 +12,8 @@ class SignUpPage extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void signUp(String name, String email, String password) async {
+  void signUp(
+      BuildContext context, String name, String email, String password) async {
     try {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -31,6 +32,8 @@ class SignUpPage extends StatelessWidget {
         "requestsFrom": [],
       };
       db.collection("friends").doc(user.uid).set(blankFriends);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MainPage(user: user)));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -140,7 +143,7 @@ class SignUpPage extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    signUp(nameController.text, emailController.text,
+                    signUp(context, nameController.text, emailController.text,
                         passwordController.text);
                   },
                   style: ElevatedButton.styleFrom(

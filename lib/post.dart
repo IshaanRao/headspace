@@ -42,10 +42,10 @@ class Post extends StatelessWidget {
                 color: globals.mainBlue,
                 width: 2.0,
               ),
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
             ),
             child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
               child: Image.network(postData.imageUrl),
             ),
           ),

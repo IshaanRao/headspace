@@ -1,3 +1,4 @@
+import 'package:benice/friends.dart';
 import 'package:benice/main.dart';
 import 'package:benice/post.dart';
 import 'package:benice/postmaker.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'globals.dart' as globals;
@@ -62,7 +64,14 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     if (user == null) {
-      return const Text("Loading..");
+      return Scaffold(
+        body: Align(
+          alignment: Alignment.center,
+          child: SpinKitCircle(
+            color: globals.mainBlue,
+          ),
+        ),
+      );
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -72,7 +81,10 @@ class MainPageState extends State<MainPage> {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Friends()));
+                },
                 icon: Icon(
                   Icons.group_add,
                   color: globals.mainBlue,
@@ -88,7 +100,15 @@ class MainPageState extends State<MainPage> {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  user = null;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(),
+                      ));
+                },
                 icon: Icon(
                   Icons.settings,
                   color: globals.mainBlue,
@@ -96,28 +116,43 @@ class MainPageState extends State<MainPage> {
               ),
             ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PostMaker()),
-              );
-            },
-            child: const Text("post"),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 350,
+            child: Text(
+              globals.question,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: globals.mainBlue,
+                fontSize: 20,
+              ),
+            ),
           ),
-          FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.add_circle_outlined, color: globals.mainBlue),
-          ),
+          const SizedBox(height: 20),
           Expanded(
-            child: SingleChildScrollView(
+              child: Stack(alignment: Alignment.center, children: [
+            SingleChildScrollView(
               child: Column(
                 children: [
                   for (var post in posts) Post(post),
                 ],
               ),
             ),
-          ),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10, bottom: 10),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PostMaker()),
+                      );
+                    },
+                    child: Icon(Icons.add, color: globals.mainBlue),
+                  ),
+                )),
+          ])),
         ]),
       ),
     );
